@@ -20,7 +20,7 @@ import java.time.LocalTime; // Nuevo import para LocalTime.MAX
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors; // Nuevo import para mapear 
+import java.util.stream.Collectors; // Nuevo import para mapear listas
 
 @Service
 @RequiredArgsConstructor
