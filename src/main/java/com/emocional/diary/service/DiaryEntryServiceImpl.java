@@ -65,7 +65,7 @@ public class DiaryEntryServiceImpl implements DiaryEntryService {
                 throw new ExternalServiceException("El análisis de sentimientos por Gemini ha fallado o la respuesta es nula.");
             }
 
-            // 4. Crear la Entidad DiaryEntry
+            // 4.  la Entidad DiaryEntry
             DiaryEntry entry = DiaryEntry.builder()
             		 .userId(userId)
                      .content(request.getEntryText()) 
