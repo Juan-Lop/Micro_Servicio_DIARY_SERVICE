@@ -187,7 +187,7 @@ public class DiaryEntryServiceImpl implements DiaryEntryService {
             // 7. Guardar la entrada actualizada
             DiaryEntry updatedEntry = diaryEntryRepository.save(existingEntry);
 
-            // 8. Convertir a DTO y 
+            // 8. Convertir a DTO y retornar
             DiaryEntryResponse response = mapper.toResponseDto(updatedEntry);
 
             log.info("✅ Entrada actualizada - ID: {}, Usuario: {}", entryId, userId);
