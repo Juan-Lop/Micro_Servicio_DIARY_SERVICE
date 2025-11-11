@@ -18,7 +18,7 @@ import com.emocional.diary.dto.DiaryEntryResponse;
 public interface DiaryEntryService {
     
 	/**
-     * Crea una nueva entrada de .
+     * Crea una nueva entrada de diario.
      * Realiza validación de límite diario, llama al servicio Gemini para análisis y guarda la entrada.
      * @param userId El ID del usuario autenticado.
      * @param request El DTO con los datos de la entrada.
