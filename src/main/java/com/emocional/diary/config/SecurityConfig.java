@@ -1,6 +1,7 @@
 package com.emocional.diary.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Configuración de seguridad para el DIARY SERVICE (CONSUMER).
@@ -25,6 +27,10 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+
+    @Value("${cors.allowed.origins:http://localhost:5174,http://localhost:3000,http://localhost:8081}")
+    private String allowedOrigins;
+
     // Se elimina la dependencia a UserDetailsService, ya que el Auth Service se encarga de eso.
 
     /**
@@ -55,28 +61,25 @@ public class SecurityConfig {
     
     /**
      * Configuración detallada de CORS para el microservicio.
+     * Los orígenes permitidos se configuran mediante la variable de entorno CORS_ALLOWED_ORIGINS
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Define orígenes permitidos (ajustar en producción)
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5174", // Tu frontend (React/Vue/etc.)
-            "http://localhost:3000",
-            "http://localhost:8081" // Auth Service (si lo necesitas para pruebas cruzadas)
-//            "*" // Puedes usar "*" si el entorno de desarrollo es muy dinámico
-        ));
-        
+
+        // Define orígenes permitidos desde variable de entorno
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        configuration.setAllowedOrigins(origins);
+
         // Define métodos permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        
+
         // Define encabezados permitidos (CRUCIAL para 'Authorization')
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        
+
         // Permite enviar cookies/encabezados de autenticación
         configuration.setAllowCredentials(true);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
