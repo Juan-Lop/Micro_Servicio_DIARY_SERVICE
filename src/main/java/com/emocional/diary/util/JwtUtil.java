@@ -48,27 +48,24 @@ public class JwtUtil {
         try {
             Claims claims = extractAllClaims(token);
 
-            // Log de todos los claims para debugging
-            log.debug("📋 Claims del JWT: {}", claims);
-
             // Estrategia 1: Buscar claim "userId" como Long
             Object userIdObj = claims.get("userId");
             if (userIdObj != null) {
-                log.debug("✅ Encontrado claim 'userId': {} (tipo: {})", userIdObj, userIdObj.getClass().getSimpleName());
+                log.info("✅ JWT Claim 'userId': {} (tipo: {})", userIdObj, userIdObj.getClass().getSimpleName());
                 return convertToLong(userIdObj);
             }
 
             // Estrategia 2: Buscar claim "sub" (subject)
             String subject = claims.getSubject();
             if (subject != null && !subject.isEmpty()) {
-                log.debug("✅ Encontrado claim 'sub': {}", subject);
+                log.info("✅ JWT Claim 'sub': {}", subject);
                 return convertToLong(subject);
             }
 
             // Estrategia 3: Buscar claim "id"
             Object idObj = claims.get("id");
             if (idObj != null) {
-                log.debug("✅ Encontrado claim 'id': {} (tipo: {})", idObj, idObj.getClass().getSimpleName());
+                log.info("✅ JWT Claim 'id': {} (tipo: {})", idObj, idObj.getClass().getSimpleName());
                 return convertToLong(idObj);
             }
 
