@@ -95,7 +95,7 @@ public class GeminiService {
         REGLAS IMPORTANTES:
         - "emotion": Una palabra clara (alegría, tristeza, ansiedad, enojo, miedo, frustración, esperanza, etc.)
         - "intensity": Número del 1 (muy baja) al 10 (muy alta)
-        - "summary": Máximo 40 palabras con esta estructura:
+        - "summary": Máximo 75 palabras con esta estructura:
           * Comienza validando la emoción (personalizado según lo que escribió)
           * Añade una reflexión sobre el factor clave (actividad, relación, logro, etc.)
           * Termina con un consejo práctico y específico
