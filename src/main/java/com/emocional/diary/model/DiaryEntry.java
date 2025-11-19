@@ -49,17 +49,20 @@ public class DiaryEntry {
     private Integer userSleepHours;
 
     // Principal preocupación del usuario
+    @Column(length = 500)
     private String mainWorry;
 
     // --- Campos de Análisis de IA (Resultado de OpenAI) ---
-    
+
     // Emoción principal detectada por la IA (e.g., "ansiedad", "alegría")
+    @Column(length = 100)
     private String aiEmotion;
 
     // Intensidad de la emoción detectada (1-10)
     private Integer aiIntensity;
 
     // Resumen conciso del estado emocional generado por la IA
+    @Column(columnDefinition = "TEXT")
     private String aiSummary;
 
     // Palabras clave extraídas, almacenadas como un array de texto
