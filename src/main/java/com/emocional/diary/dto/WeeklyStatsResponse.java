@@ -13,4 +13,10 @@ public class WeeklyStatsResponse {
     private double averageSleep;
     private String mainWorry;
     private List<StressHistoryItem> stressHistory;
+
+    // Datos para gráfica de "Correlación Sueño vs. Estrés"
+    private List<SleepStressDataItem> sleepStressData;
+
+    // Datos para gráfica de "Distribución de Preocupaciones"
+    private List<WorryDistributionItem> worriesDistribution;
 }

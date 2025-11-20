@@ -1,7 +1,9 @@
 package com.emocional.diary.service;
 
+import com.emocional.diary.dto.SleepStressDataItem;
 import com.emocional.diary.dto.StressHistoryItem;
 import com.emocional.diary.dto.WeeklyStatsResponse;
+import com.emocional.diary.dto.WorryDistributionItem;
 import com.emocional.diary.model.DiaryEntry;
 import com.emocional.diary.repository.DiaryEntryRepository;
 import lombok.RequiredArgsConstructor;
@@ -87,12 +89,46 @@ public class StatsServiceImpl implements StatsService {
                         .build())
                 .collect(Collectors.toList());
 
+        // --- Build Sleep-Stress Correlation Data for the last 7 days ---
+        Map<LocalDate, Double> dailySleepAverages = currentWeekEntries.stream()
+                .collect(Collectors.groupingBy(
+                        entry -> entry.getCreatedAt().atZone(defaultZoneId).toLocalDate(),
+                        Collectors.averagingInt(DiaryEntry::getUserSleepHours)
+                ));
+
+        List<SleepStressDataItem> sleepStressData = Stream.iterate(LocalDate.now().minusDays(6), date -> date.plusDays(1))
+                .limit(7)
+                .map(date -> SleepStressDataItem.builder()
+                        .date(date)
+                        .sleep(dailySleepAverages.getOrDefault(date, 0.0))
+                        .stress(dailyStressAverages.getOrDefault(date, 0.0))
+                        .build())
+                .collect(Collectors.toList());
+
+        // --- Build Worries Distribution (count by category) ---
+        Map<String, Long> worryCounts = currentWeekEntries.stream()
+                .filter(entry -> entry.getMainWorry() != null && !entry.getMainWorry().trim().isEmpty())
+                .collect(Collectors.groupingBy(
+                        DiaryEntry::getMainWorry,
+                        Collectors.counting()
+                ));
+
+        List<WorryDistributionItem> worriesDistribution = worryCounts.entrySet().stream()
+                .map(entry -> WorryDistributionItem.builder()
+                        .category(entry.getKey())
+                        .count(entry.getValue().intValue())
+                        .build())
+                .sorted((a, b) -> Integer.compare(b.getCount(), a.getCount())) // Ordenar por count descendente
+                .collect(Collectors.toList());
+
         return WeeklyStatsResponse.builder()
                 .averageStress(averageStress)
                 .previousWeekStress(previousWeekStress)
                 .averageSleep(averageSleep)
                 .mainWorry(mainWorry)
                 .stressHistory(stressHistory)
+                .sleepStressData(sleepStressData)
+                .worriesDistribution(worriesDistribution)
                 .build();
     }
 }
